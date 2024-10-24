@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4BC7CF5A2CCAA6EB0032E46D /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = 4BC7CF592CCAA6EB0032E46D /* GoogleGenerativeAI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4B14EC932CBC3C1D00702D41 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BC7CF5A2CCAA6EB0032E46D /* GoogleGenerativeAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = "ai-city-tour-planner";
 			packageProductDependencies = (
+				4BC7CF592CCAA6EB0032E46D /* GoogleGenerativeAI */,
 			);
 			productName = "ai-city-tour-planner";
 			productReference = 4B14EC822CBC3C1B00702D41 /* ai-city-tour-planner.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 4B14EC792CBC3C1B00702D41;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4BC7CF582CCAA6EB0032E46D /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4B14EC832CBC3C1B00702D41 /* Products */;
 			projectDirPath = "";
@@ -564,6 +573,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4BC7CF582CCAA6EB0032E46D /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4BC7CF592CCAA6EB0032E46D /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4BC7CF582CCAA6EB0032E46D /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4B14EC7A2CBC3C1B00702D41 /* Project object */;
 }
