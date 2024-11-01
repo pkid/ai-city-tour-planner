@@ -52,29 +52,6 @@ struct ContentView: View {
                     .foregroundColor(.white)
                     .cornerRadius(8)
             }
-
-           // Button to fetch current location
-           Button(action: {
-//                viewModel.fetchCurrentLocation()
-               switch CLLocationManager.authorizationStatus() {
-                       case .notDetermined, .restricted, .denied:
-                           print("Location access not granted")
-                       case .authorizedWhenInUse, .authorizedAlways:
-                           viewModel.fetchCurrentLocation()
-                       @unknown default:
-                           print("Unknown authorization status")
-                       }
-           }) {
-               Text("Get Current Location")
-                   .padding()
-                   .background(Color.blue)
-                   .foregroundColor(.white)
-                   .cornerRadius(8)
-           }
-           
-           // Display current location
-           Text(viewModel.currentLocation)
-               .padding()
         }
         .padding()
     }
