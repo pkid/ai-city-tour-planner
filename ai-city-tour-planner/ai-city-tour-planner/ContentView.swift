@@ -31,7 +31,19 @@ struct ContentView: View {
             // Button to ask LLM for a tour plan
             Button(action: {
                 Task {
-                    await askLLMforTourPlan(city: locationInput, hours: selectedHours)
+                    switch CLLocationManager.authorizationStatus() {
+                        case .notDetermined, .restricted, .denied:
+                            print("Location access not granted")
+                        case .authorizedWhenInUse, .authorizedAlways:
+                            await viewModel.fetchCurrentLocation()
+                            // Wait a few seconds for location to update
+                            try? await Task.sleep(for: .seconds(2))
+                            print("current location: ", viewModel.currentLocation)
+                            await askLLMforTourPlan(city: locationInput, hours: selectedHours, currentLatitude: viewModel.currentLatitude, currentLongitude: viewModel.currentLongitude)
+                        @unknown default:
+                            print("Unknown authorization status")
+                    }
+                    // await askLLMforTourPlan(city: locationInput, hours: selectedHours)
                 }
             }) {
                 Text("Get Tour Plan")
@@ -41,40 +53,42 @@ struct ContentView: View {
                     .cornerRadius(8)
             }
 
-            // Button to fetch current location
-            Button(action: {
+           // Button to fetch current location
+           Button(action: {
 //                viewModel.fetchCurrentLocation()
-                switch CLLocationManager.authorizationStatus() {
-                        case .notDetermined, .restricted, .denied:
-                            print("Location access not granted")
-                        case .authorizedWhenInUse, .authorizedAlways:
-                    viewModel.fetchCurrentLocation()
-                        @unknown default:
-                            print("Unknown authorization status")
-                        }
-            }) {
-                Text("Get Current Location")
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-            
-            // Display current location
-            Text(viewModel.currentLocation)
-                .padding()
+               switch CLLocationManager.authorizationStatus() {
+                       case .notDetermined, .restricted, .denied:
+                           print("Location access not granted")
+                       case .authorizedWhenInUse, .authorizedAlways:
+                           viewModel.fetchCurrentLocation()
+                       @unknown default:
+                           print("Unknown authorization status")
+                       }
+           }) {
+               Text("Get Current Location")
+                   .padding()
+                   .background(Color.blue)
+                   .foregroundColor(.white)
+                   .cornerRadius(8)
+           }
+           
+           // Display current location
+           Text(viewModel.currentLocation)
+               .padding()
         }
         .padding()
     }
 
 
     // Function to ask LLM for a tour plan
-    private func askLLMforTourPlan(city: String, hours: Int) async {
+    private func askLLMforTourPlan(city: String, hours: Int, currentLatitude: Double,  currentLongitude: Double) async {
         print(city)
-        let apiKey = ""
+        let apiKey = "AIzaSyAxXCaQSekUXkT6m8uU-UPfERcrE6-1nZQ"
        
         let prompt = """
-        Provide a JSON array of points of interest for a \(hours)-hour round walking tour in \(city) with the following structure for each location:
+        Provide a JSON array of points of interest for a \(hours)-hour round walking tour in \(city), 
+        starting from my current location at coordinates: \(currentLatitude), \(currentLongitude). 
+        For each location, use the following structure:
         {
           "name": "Location Name",
           "latitude": 00.000000,
@@ -85,15 +99,17 @@ struct ContentView: View {
         }
 
         Constraints:
-        - Total tour must be a round trip, starting and ending at the same point
-        - First and last locations must be the same
-        - Total tour should match exactly \(hours) hours (including walking time)
+        - First point must be closest attraction to my current location at coordinates: \(currentLatitude), \(currentLongitude)
+        - Total tour must be a round trip and tour must return to my starting point
+        - Total tour duration should be \(hours) hours including walking time
         - Select attractions that can be comfortably visited within the time frame
         - Optimize for a logical walking route with minimal backtracking
-        - Prioritize most significant attractions
+        - Sort by logical walking sequence
         - Ensure walking distances between locations are reasonable
         - Do not include any additional text or explanation
         """
+
+        print("prompt: ", prompt)
         
         let generativeModel =
           GenerativeModel(

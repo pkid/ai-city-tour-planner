@@ -3,6 +3,9 @@ import CoreLocation
 
 class LocationViewModel: ObservableObject {
     @Published var currentLocation: String = "Current Location: Unknown"
+    @Published var currentLatitude: Double = 0.0
+    @Published var currentLongitude: Double = 0.0
+
     private var locationManager = CLLocationManager()
     private var locationDelegate: LocationDelegate?
 
@@ -10,6 +13,8 @@ class LocationViewModel: ObservableObject {
         locationDelegate = LocationDelegate { location in
             if let location = location {
                 DispatchQueue.main.async {
+                    self.currentLatitude = location.coordinate.latitude
+                    self.currentLongitude = location.coordinate.longitude
                     self.currentLocation = "Current Location: \(location.coordinate.latitude), \(location.coordinate.longitude)"
                 }
             } else {
