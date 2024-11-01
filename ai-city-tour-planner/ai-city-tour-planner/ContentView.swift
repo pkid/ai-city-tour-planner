@@ -83,7 +83,7 @@ struct ContentView: View {
     // Function to ask LLM for a tour plan
     private func askLLMforTourPlan(city: String, hours: Int, currentLatitude: Double,  currentLongitude: Double) async {
         print(city)
-        let apiKey = "AIzaSyAxXCaQSekUXkT6m8uU-UPfERcrE6-1nZQ"
+        let apiKey = ""
        
         let prompt = """
         Provide a JSON array of points of interest for a \(hours)-hour round walking tour in \(city), 
